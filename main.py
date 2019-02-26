@@ -41,6 +41,57 @@ def display_blog_entries():
         # just shows all entries
             all_entries = Entry.query.all()
         return render_template('all_entries.html', title= "All Blog Posts", all_entries=all_entries)
-        
+
+
+# validation for empty post
+
+def empty_val(x):
+    if x:
+        return True
+    else:
+        return False
+
+# redirect and error messages
+
+@app.route('/new_entry', methods=['GET', 'POST'])
+# form for new blog entry with get, create new entry or redisplay if invalid with post
+def add_entry():
+    if request.method == 'POST':
+        #create empty string for errors
+        title_error = ""
+        entry_error = ""
+
+        # assigning variable to blog title
+        entry_title = request.form['blog_title']
+        # assigning variable to blog body
+        entry_body = request.form['blog_body']
+        # new blog post variable from title and entry
+        entry_new = Blog(entry_title, entry_body)
+
+        # entry will be added if title and body have inputs in them
+        if empty_val(entry_title) and empty_val(entry_body):
+            # adds new post
+            db.session.add(entry_new)
+            # adds to database
+            db.session.commit()
+            post_link = "blog?id=" + str(entry_new.id)
+            return redirect(post_link)
+        else:
+            if not empty_val(entry_title) and not empty_val(entry_body):
+                title_error = "Please enter your blog title."
+                entry_error = "Please enter the body of your blog entry."
+                return render_template('new_post.hmtl', entry_error=entry_error, title_error=title_error)
+            elif not empty_val(entry_title):
+                title_error = "Please enter your blog title."
+                return render_template('new_post.hmtl', title_error=title_error, entry_body=entry_body)
+            elif not empty_val(entry_body):
+                entry_error = "Please enter the body of your blog entry."
+                return render_template('new_post.hmtl', entry_error=entry_error, entry_title=entry_title)
+    
+    # display new blog entry form
+    else:
+        return render_template('new_post.html')
+
+
 
 
