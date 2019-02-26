@@ -92,6 +92,9 @@ def add_entry():
     else:
         return render_template('new_post.html')
 
+# runs when main.py file runs
 
+if __name__ == "__main__":
+    app.run()
 
 
