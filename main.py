@@ -66,7 +66,7 @@ def add_entry():
         # assigning variable to blog body
         entry_body = request.form['blog_body']
         # new blog post variable from title and entry
-        entry_new = Blog(entry_title, entry_body)
+        entry_new = Entry(entry_title, entry_body)
 
         # entry will be added if title and body have inputs in them
         if empty_val(entry_title) and empty_val(entry_body):
